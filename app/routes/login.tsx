@@ -16,6 +16,7 @@ import { Input } from "~/components/ui/input";
 import { axiosInstance } from "~/lib/axios";
 import { useAuth } from "~/components/stores/useAuth";
 
+/* ================= SCHEMA ================= */
 const formSchema = z.object({
   email: z.email("Email salah."),
   password: z.string().min(5, "Password minimal 5 karakter."),
@@ -26,6 +27,7 @@ export const clientLoader = () => {
   if (user) return redirect("/");
 };
 
+/* ================= PAGE ================= */
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ export default function Login() {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
       const response = await axiosInstance.post("/users/login", {
-        login: data.email, 
+        login: data.email,
         password: data.password,
       });
 
@@ -53,29 +55,45 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <Link to="/" className="text-2xl font-bold mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-amber-400 via-amber-500 to-amber-600 px-4">
+      <Card className="w-full max-w-md rounded-2xl shadow-2xl border-0 bg-white/95 backdrop-blur">
+        {/* ================= HEADER ================= */}
+        <CardHeader className="space-y-2 text-center">
+          <Link
+            to="/"
+            className="text-3xl font-extrabold tracking-tight text-amber-600"
+          >
             Hirealistener
           </Link>
-          <CardTitle>Selamat datang!</CardTitle>
-          <CardDescription>Masukkan data kredensial anda</CardDescription>
+
+          <CardTitle className="text-2xl font-bold text-gray-800">
+            Selamat datang kembali
+          </CardTitle>
+
+          <CardDescription className="text-gray-500">
+            Masuk untuk melanjutkan ke akun Anda
+          </CardDescription>
         </CardHeader>
 
+        {/* ================= CONTENT ================= */}
         <CardContent>
           <form
-            id="form-login"
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
+            className="space-y-5"
           >
             <Controller
               name="email"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Email</FieldLabel>
-                  <Input {...field} placeholder="you@email.com" />
+                  <FieldLabel className="text-sm font-medium text-gray-700">
+                    Email
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    placeholder="you@email.com"
+                    className="h-11 focus-visible:ring-amber-500"
+                  />
                   {fieldState.error && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -88,8 +106,14 @@ export default function Login() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Password</FieldLabel>
-                  <Input {...field} type="password" />
+                  <FieldLabel className="text-sm font-medium text-gray-700">
+                    Password
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    type="password"
+                    className="h-11 focus-visible:ring-amber-500"
+                  />
                   {fieldState.error && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -99,17 +123,21 @@ export default function Login() {
 
             <Button
               type="submit"
-              className="w-full"
               disabled={form.formState.isSubmitting}
+              className="h-11 w-full rounded-xl bg-amber-500 font-semibold text-white hover:bg-amber-600 transition"
             >
               {form.formState.isSubmitting ? "Loading..." : "Login"}
             </Button>
           </form>
         </CardContent>
 
-        <CardFooter className="justify-center text-sm">
-          Anda belum punya akun?{" "}
-          <Link to="/register" className="text-primary ml-1">
+        {/* ================= FOOTER ================= */}
+        <CardFooter className="flex justify-center text-sm text-gray-600">
+          Belum punya akun?
+          <Link
+            to="/register"
+            className="ml-1 font-medium text-amber-600 hover:underline"
+          >
             Register
           </Link>
         </CardFooter>
